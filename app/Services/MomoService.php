@@ -20,6 +20,14 @@ class MomoService
         $requestId = time() . "";
         $returnUrl = config('momo.return_url');
         $notifyUrl = config('momo.notify_url');
+
+        if (empty($returnUrl)) {
+            $returnUrl = 'https://pharmacy-web-eight.vercel.app/checkout/momo-return';
+        }
+        if (empty($notifyUrl)) {
+            $notifyUrl = 'https://pharmacy-api-ak90.onrender.com/api/v1/momo-ipn';
+        }
+
         $extraData = "";
         $requestType = "payWithMethod";
         $orderGroupId = "";
