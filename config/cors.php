@@ -13,7 +13,10 @@ return [
         'http://127.0.0.1:5173',
         'http://127.0.0.1:5174',
         'http://127.0.0.1:5175',
-        env('FRONTEND_URL', 'http://localhost:5173'),
+        env('FRONTEND_URL', 'https://pharmacy-web-eight.vercel.app'),
+        env('ADMIN_URL', 'https://pharmacy-admin-zeta.vercel.app'),
+        'https://pharmacy-web-eight.vercel.app',
+        'https://pharmacy-admin-zeta.vercel.app',
     ],
 
     'allowed_origins_patterns' => [],
