@@ -13,13 +13,27 @@ class VNPayService
         $vnp_TmnCode = config('vnpay.vnp_TmnCode');
         $vnp_HashSecret = config('vnpay.vnp_HashSecret');
 
+        if (empty($vnp_Returnurl)) {
+            // Auto fallback if env is not configured on Render
+            $vnp_Returnurl = 'https://pharmacy-web-eight.vercel.app/checkout/vnpay-return';
+        }
+
         $vnp_TxnRef = $order->order_code . '_' . time(); // Mã đơn hàng.
         $vnp_OrderInfo = 'Thanh toan don hang #' . $order->order_code;
         $vnp_OrderType = 'billpayment';
         $vnp_Amount = (int)round($order->total * 100);
         $vnp_Locale = 'vn';
         $vnp_BankCode = '';
-        $vnp_IpAddr = Request::ip();
+        
+        // Sanitize IP to avoid code 03 on proxies/Render/IPv6 environments
+        $vnp_IpAddr = Request::ip() ?? '127.0.0.1';
+        if (str_contains($vnp_IpAddr, ',')) {
+            $ips = explode(',', $vnp_IpAddr);
+            $vnp_IpAddr = trim($ips[0]);
+        }
+        if (!filter_var($vnp_IpAddr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            $vnp_IpAddr = '127.0.0.1';
+        }
 
         $inputData = array(
             "vnp_Version" => "2.1.0",
